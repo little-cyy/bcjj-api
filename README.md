@@ -70,7 +70,7 @@ console.log(publicKey);
 console.log(privateKey);
 ```
 
-复制得到的公钥 publicKey，并填写到前端项目（front-endvue-manage-system `）.env`文件中的`VITE_RSA_PUBLIC_KEY`配置。
+复制得到的公钥 publicKey，并填写到前端项目（bcjj-v3-manage-system） `.env`文件中的`VITE_RSA_PUBLIC_KEY`配置。
 
 复制得到的私钥 privateKey，并填写到`.env`文件中的`RSA_PRIVATE_KEY`配置。
 
