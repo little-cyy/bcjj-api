@@ -82,7 +82,7 @@ module.exports = router;
 function addLoginLog(req, username, status, message) {
   //TODO:记录登录日志
   //获取登录ip信息
-  const ip = req.headers["x-forwarded-for"] || req.ip;
+  let ip = req.headers["x-forwarded-for"] || req.ip;
   if (ip.includes("::ffff:")) {
     ip = ip.split("::ffff:")[1];
   }
