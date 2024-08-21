@@ -31,6 +31,10 @@ router.get("/", async function (req, res) {
     }
     //findAndCountAll 方法同时查询数据总数和分页数据
     const { rows, count } = await Menu.findAndCountAll(condition);
+    // 添加 editDisabled 列
+    rows.forEach((row) => {
+      row.dataValues.editDisabled = req.user.role !== 100;
+    });
     successResponse(res, "查询菜单列表成功", {
       list: rows,
       currentPage,

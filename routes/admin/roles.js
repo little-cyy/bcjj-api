@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { Role } = require("../../models");
+const { Op } = require("sequelize");
 const { successResponse, failureResponse } = require("../../utils/responses");
 
 /**
@@ -11,7 +12,11 @@ router.get("/", async function (req, res) {
   try {
     let condition = {
       order: [["id", "ASC"]],
-      where: {},
+      where: {
+        code: {
+          [Op.eq]: 1,
+        },
+      },
     };
 
     //findAndCountAll 方法同时查询数据总数和分页数据
@@ -22,6 +27,8 @@ router.get("/", async function (req, res) {
         return (item.menus = []);
       }
       item.menus = item.menus.split(",")?.map((code) => code && Number(code));
+      // 添加 editDisabled 列
+      item.dataValues.editDisabled = req.user.role !== 100;
     });
     successResponse(res, "查询角色列表成功", {
       list: result,

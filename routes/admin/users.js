@@ -53,6 +53,10 @@ router.get("/", async function (req, res) {
     }
     //findAndCountAll 方法同时查询数据总数和分页数据
     const { count, rows } = await User.findAndCountAll(condition);
+    // 添加 editDisabled 列
+    rows.forEach((row) => {
+      row.dataValues.editDisabled = row.role === 100 && req.user.role !== 100;
+    });
     successResponse(res, "查询用户列表成功", {
       list: rows,
       currentPage,
