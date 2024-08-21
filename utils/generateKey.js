@@ -1,22 +1,13 @@
-const crypto = require("crypto");
+const NodeRSA = require("node-rsa");
 
 /**
  * 生成 RSA 公私钥对
  * @return {Object} { publicKey, privateKey }
  */
 const generateKey = () => {
-  const { publicKey, privateKey } = crypto.generateKeyPairSync("rsa", {
-    modulusLength: 1024,
-    publicKeyEncoding: {
-      type: "spki",
-      format: "pem",
-    },
-    privateKeyEncoding: {
-      type: "pkcs8",
-      format: "pem",
-    },
-  });
-
+  const key = new NodeRSA({ b: 1024 });
+  const privateKey = key.exportKey("pkcs1-private");
+  const publicKey = key.exportKey("pkcs1-public-pem");
   return { publicKey, privateKey };
 };
 
@@ -27,10 +18,12 @@ const generateKey = () => {
  * @return {string} 加密后的密文
  */
 const encrypt = (data, publicKey = process.env.RSA_PUBLIC_KEY) => {
-  const dataJSON = JSON.stringify(data);
-  return crypto
-    .publicEncrypt(publicKey, Buffer.from(dataJSON, "utf-8"))
-    .toString("base64");
+  try {
+    const key = new NodeRSA(publicKey, "public");
+    return key.encrypt(data, "base64");
+  } catch (error) {
+    return false;
+  }
 };
 
 /**
@@ -41,17 +34,12 @@ const encrypt = (data, publicKey = process.env.RSA_PUBLIC_KEY) => {
  */
 const decrypt = (secretText, privateKey = process.env.RSA_PRIVATE_KEY) => {
   try {
-    const decryptData = crypto
-      .privateDecrypt(
-        {
-          key: privateKey,
-          // padding 的值需要与公钥的编码类型相对应
-          padding: crypto.constants.RSA_PKCS1_PADDING,
-        },
-        Buffer.from(secretText, "base64")
-      )
-      .toString("utf-8");
-    return JSON.parse(decryptData);
+    const keyRSA = new NodeRSA(privateKey, "private", {
+      encryptionScheme: "pkcs1",
+    });
+    // By default it will use the node crypto library with the CVE
+    keyRSA.setOptions({ environment: "browser" });
+    return keyRSA.decrypt(secretText, "utf8");
   } catch (error) {
     return false;
   }

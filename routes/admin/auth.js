@@ -32,7 +32,7 @@ router.post("/sign_in", async (req, res, next) => {
     }
     const { id, username, nickname, email, role } = user;
     //验证密码
-    const pwd = decrypt(password) || password;
+    const pwd = JSON.parse(decrypt(password)) || password;
     const isPasswordValid = bcrypt.compareSync(pwd, user.password);
     if (!isPasswordValid) {
       addLoginLog(req, username, false, "密码错误");

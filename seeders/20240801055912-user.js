@@ -14,11 +14,12 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
      */
+    const SECRET = process.env.JWT_SECRET;
     let users = [
       {
         username: "superadmin",
         email: "superadmin@example.com",
-        password: bcrypt.hashSync("123123", 10),
+        password: bcrypt.hashSync("123123", SECRET),
         nickName: "超级管理员",
         sex: 2,
         role: 100,
@@ -33,7 +34,7 @@ module.exports = {
       const user = {
         username: `admin${i}`,
         email: `admin${i}@example.com`,
-        password: bcrypt.hashSync("123123", 10),
+        password: bcrypt.hashSync("123123", SECRET),
         nickName: `管理员${i}`,
         sex: sample([0, 1, 2]),
         role: 1,
@@ -49,7 +50,7 @@ module.exports = {
       const user = {
         username: `user${i}`,
         email: `user${i}@example.com`,
-        password: bcrypt.hashSync("123123", 10),
+        password: bcrypt.hashSync("123123", SECRET),
         nickName: `普通用户${i}`,
         sex: sample([0, 1, 2]),
         role: 0,

@@ -51,22 +51,12 @@ node
 进入交互模式后，运行
 
 ```js
-const crypto = require("crypto");
-
-const { publicKey, privateKey } = crypto.generateKeyPairSync("rsa", {
-  modulusLength: 1024,
-  publicKeyEncoding: {
-    type: "spki",
-    format: "pem",
-  },
-  privateKeyEncoding: {
-    type: "pkcs8",
-    format: "pem",
-  },
-});
+const NodeRSA = require("node-rsa");
+const key = new NodeRSA({ b: 1024 });
+const privateKey = key.exportKey("pkcs1-private");
+const publicKey = key.exportKey("pkcs1-public-pem");
 
 console.log(publicKey);
-
 console.log(privateKey);
 ```
 

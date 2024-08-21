@@ -50,7 +50,7 @@ router.put("/account", async function (req, res) {
       throw new BadRequestError("新密码和确认密码不一致");
     }
     //验证密码
-    const pwd = decrypt(password) || password;
+    const pwd = JSON.parse(decrypt(password)) || password;
     const isPasswordValid = bcrypt.compareSync(pwd, user.password);
     if (!isPasswordValid) {
       throw new BadRequestError("当前密码错误");

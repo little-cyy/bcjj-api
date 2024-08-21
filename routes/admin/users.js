@@ -152,7 +152,7 @@ function filterBody(req) {
   return {
     email,
     username,
-    password: decrypt(password) || password, // 如果解密失败，则使用原密码
+    password: JSON.parse(decrypt(password)) || password, // 如果解密失败，则使用原密码
     nickname,
     sex,
     company,
