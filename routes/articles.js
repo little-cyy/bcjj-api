@@ -18,6 +18,9 @@ router.get("/", async function (req, res) {
       order: [["id", "DESC"]],
       offset: (currentPage - 1) * paegSize,
       limit: paegSize,
+      where: {
+        status: 1,
+      },
     };
     //findAndCountAll 方法同时查询数据总数和分页数据
     const { count, rows } = await Article.findAndCountAll(condition);

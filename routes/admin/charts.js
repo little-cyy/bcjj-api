@@ -31,14 +31,19 @@ router.get("/userCount", async (req, res, next) => {
     const [result] = await sequelize.query(
       `
       SELECT 
-      DATE_FORMAT(u.createdAt, '%Y-%m') AS month,
-      COUNT(DISTINCT u.username) AS newUsers,
-      COUNT(DISTINCT l.username) AS activeUsers
-      FROM users u
-      LEFT JOIN loginlogs l ON  DATE_FORMAT(l.createdAt, '%Y-%m') = DATE_FORMAT(u.createdAt, '%Y-%m')
-      WHERE u.createdAt >= NOW() - INTERVAL 1 YEAR
-      GROUP BY DATE_FORMAT(u.createdAt, '%Y-%m')
-      ORDER BY DATE_FORMAT(u.createdAt, '%Y-%m');
+          DATE_FORMAT(u.createdAt, '%Y-%m') AS month,
+          COUNT(DISTINCT u.username) AS newUsers,
+          COUNT(DISTINCT l.username) AS activeUsers
+      FROM 
+          users u
+      LEFT JOIN 
+          loginlogs l ON DATE_FORMAT(l.createdAt, '%Y-%m') = DATE_FORMAT(u.createdAt, '%Y-%m') AND l.status = 1
+      WHERE 
+          u.createdAt >= NOW() - INTERVAL 1 YEAR
+      GROUP BY 
+          DATE_FORMAT(u.createdAt, '%Y-%m')
+      ORDER BY 
+          DATE_FORMAT(u.createdAt, '%Y-%m');
       `
     );
     const data = {

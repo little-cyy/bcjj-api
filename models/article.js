@@ -40,6 +40,22 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       content: DataTypes.TEXT,
+      state: {
+        type: DataTypes.TINYINT,
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: "文章状态必须填写",
+          },
+          notEmpty: {
+            msg: "文章状态不能为空",
+          },
+          isIn: {
+            args: [[0, 1]],
+            msg: "文章状态只能是0、1【0：未发布，1:发布】",
+          },
+        },
+      },
     },
     {
       sequelize,

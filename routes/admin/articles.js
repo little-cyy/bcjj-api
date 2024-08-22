@@ -11,7 +11,7 @@ const { successResponse, failureResponse } = require("../../utils/responses");
  */
 router.get("/", async function (req, res) {
   try {
-    let { title, currentPage, paegSize } = req.query;
+    let { title, state, currentPage, paegSize } = req.query;
     currentPage = Math.abs(currentPage) || 1; //当前页码
     paegSize = Math.abs(paegSize) || 10; //每页显示多少条数据
     let condition = {
@@ -24,6 +24,13 @@ router.get("/", async function (req, res) {
       condition.where = {
         title: {
           [Op.like]: `%${title}%`,
+        },
+      };
+    }
+    if (state) {
+      condition.where = {
+        state: {
+          [Op.like]: `%${state}%`,
         },
       };
     }
@@ -136,6 +143,6 @@ async function getArticles(req) {
  * @description  过滤请求体
  */
 function filterBody(req) {
-  const { title, content } = req.body;
-  return { title, content };
+  const { title, content, state } = req.body;
+  return { title, content, state };
 }
