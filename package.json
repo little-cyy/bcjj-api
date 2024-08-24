@@ -19,5 +19,13 @@
     "node-rsa": "^1.1.1",
     "sequelize": "^6.37.3",
     "useragent": "^2.3.0"
+  },
+  "devDependencies": {
+    "cz-conventional-changelog-zh": "^0.0.2"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog-zh"
+    }
   }
 }
