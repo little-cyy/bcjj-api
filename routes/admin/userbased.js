@@ -18,6 +18,8 @@ router.get("/userInfo", async function (req, res) {
       },
       attributes: ["address", ["createdAt", "lastLoginTime"]],
       order: [["createdAt", "DESC"]],
+      limit: 1,
+      offset: 1, // 从倒数第二条开始
     });
 
     successResponse(res, "查询用户详情成功", { user: userObj, loginInfo });

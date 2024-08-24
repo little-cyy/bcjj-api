@@ -23,40 +23,58 @@ router.get("/sex", async (req, res, next) => {
 });
 
 /**
- * 查询近一年每个月新增用户数
+ * 查询近一周每天新增用户数和登录用户数
  * GET /admin/charts/userCount
  */
 router.get("/userCount", async (req, res, next) => {
   try {
     const [result] = await sequelize.query(
       `
-      SELECT 
-          DATE_FORMAT(u.createdAt, '%Y-%m') AS month,
-          COUNT(DISTINCT u.username) AS newUsers,
-          COUNT(DISTINCT l.username) AS activeUsers
-      FROM 
-          users u
-      LEFT JOIN 
-          loginlogs l ON DATE_FORMAT(l.createdAt, '%Y-%m') = DATE_FORMAT(u.createdAt, '%Y-%m') AND l.status = 1
-      WHERE 
-          u.createdAt >= NOW() - INTERVAL 1 YEAR
-      GROUP BY 
-          DATE_FORMAT(u.createdAt, '%Y-%m')
-      ORDER BY 
-          DATE_FORMAT(u.createdAt, '%Y-%m');
+      SELECT
+          days,
+          SUM(newUsers) AS newUsers,
+          SUM(activeUsers) AS activeUsers
+      FROM
+          (
+              SELECT
+                  DATE_FORMAT(l.createdAt, '%m-%d') AS days,
+                  0 AS newUsers,
+                  COUNT(DISTINCT l.username) AS activeUsers
+              FROM
+                  loginlogs l
+              WHERE
+                  l.createdAt >= NOW() - INTERVAL 7 DAY
+              GROUP BY
+                  days
+              UNION
+              SELECT
+                  DATE_FORMAT(u.createdAt, '%m-%d') AS days,
+                  COUNT(DISTINCT u.username) AS newUsers,
+                  0 AS activeUsers
+              FROM
+                  users u
+              WHERE
+                  u.createdAt >= NOW() - INTERVAL 7 DAY
+              GROUP BY
+                  days
+          ) AS combined
+      GROUP BY
+          days
+      ORDER BY
+    	    days;
       `
     );
     const data = {
-      months: [],
+      days: [],
       adduserCounts: [],
       activeuserCounts: [],
     };
     result.forEach((item) => {
-      data.months.push(item.month);
+      data.days.push(item.days);
       data.adduserCounts.push(item.newUsers);
       data.activeuserCounts.push(item.activeUsers);
     });
-    successResponse(res, "查询每月用户数量成功", data);
+    successResponse(res, "查询每周用户数量成功", data);
   } catch (error) {
     failureResponse(error);
   }
