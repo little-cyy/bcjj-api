@@ -124,9 +124,7 @@ router.post("/batchDelete", async function (req, res) {
         id: ids,
       },
     });
-    setTimeout(() => {
-      successResponse(res, "批量删除章节成功");
-    }, 3000);
+    successResponse(res, "批量删除章节成功");
   } catch (error) {
     failureResponse(res, error);
   }
