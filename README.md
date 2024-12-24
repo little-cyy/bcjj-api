@@ -9,7 +9,7 @@
 ```txt
 NODE_ENV=development
 PORT=3000
-SECRET=你的秘钥
+JWT_SECRET=你的秘钥
 RSA_PRIVATE_KEY=你的私钥
 ```
 

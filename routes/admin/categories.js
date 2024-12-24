@@ -31,13 +31,12 @@ router.get("/", async function (req, res) {
       ],
       offset: (currentPage - 1) * paegSize,
       limit: paegSize,
+      where: {},
     };
     if (name) {
       //实现模糊查询分类名字
-      condition.where = {
-        name: {
-          [Op.like]: `%${name}%`,
-        },
+      condition.where.name = {
+        [Op.like]: `%${name}%`,
       };
     }
 

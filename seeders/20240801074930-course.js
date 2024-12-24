@@ -34,6 +34,7 @@ module.exports = {
         introductory: false,
         createdAt: new Date(),
         updatedAt: new Date(),
+        chaptersCount: item === "CSS教程" ? 1 : 0,
       });
     });
     let course2 = ["python教程", "Node.js教程", "PHP教程"];
@@ -46,6 +47,7 @@ module.exports = {
         introductory: false,
         createdAt: new Date(),
         updatedAt: new Date(),
+        chaptersCount: item === "Node.js教程" ? 4 : 0,
       });
     });
     let course3 = [

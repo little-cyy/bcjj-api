@@ -18,13 +18,12 @@ router.get("/", async function (req, res) {
       order: [["id", "DESC"]],
       offset: (currentPage - 1) * paegSize,
       limit: paegSize,
+      where: {},
     };
     if (title) {
       //实现模糊查询文章标题
-      condition.where = {
-        title: {
-          [Op.like]: `%${title}%`,
-        },
+      condition.where.title = {
+        [Op.like]: `%${title}%`,
       };
     }
     if (state) {
