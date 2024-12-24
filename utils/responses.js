@@ -63,6 +63,13 @@ function failureResponse(res, error) {
       error: [error.message],
     });
   }
+  if (error.name === "ConflictError") {
+    return res.status(409).json({
+      message: "请求存在冲突",
+      status: false,
+      error: [error.message],
+    });
+  }
   return res.status(500).json({
     message: "服务器错误",
     status: false,

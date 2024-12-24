@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { Course, Category, User } = require("../../models");
 const { Op, Sequelize } = require("sequelize");
-const { NotFoundError, BadRequestError } = require("../../utils/errors");
+const { NotFoundError, ConflictError } = require("../../utils/errors");
 const { successResponse, failureResponse } = require("../../utils/responses");
 
 /**
@@ -104,7 +104,7 @@ router.delete("/:id", async function (req, res) {
   try {
     const course = await getCourses(req);
     if (course.dataValues.actuaChapterCount > 0) {
-      throw new BadRequestError("该课程下有章节，无法删除");
+      throw new ConflictError("该课程下有章节，无法删除");
     }
     await course.destroy();
     successResponse(res, "删除课程成功");
