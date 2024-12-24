@@ -31,7 +31,10 @@ const adminAuthRouter = require("./routes/admin/auth");
 const adminMenusRouter = require("./routes/admin/menus");
 const admindictionariesRouter = require("./routes/admin/dictionaries");
 const adminRolesRouter = require("./routes/admin/roles");
+const adminAttachmentsRouter = require("./routes/admin/attachments");
 //endregion
+
+const uploadsRouter = require("./routes/uploads");
 
 const app = express();
 
@@ -66,6 +69,8 @@ app.use("/admin/auth", adminAuthRouter);
 app.use("/admin/menus", adminAuth, adminMenusRouter);
 app.use("/admin/dictionaries", adminAuth, admindictionariesRouter);
 app.use("/admin/roles", adminAuth, adminRolesRouter);
+app.use("/admin/attachments", adminAuth, adminAttachmentsRouter);
 //#endregion
 
+app.use("/uploads", adminAuth, uploadsRouter);
 module.exports = app;

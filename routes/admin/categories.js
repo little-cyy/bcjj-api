@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { Category, Course } = require("../../models");
 const { Op, Sequelize } = require("sequelize");
-const { NotFoundError, BadRequestError } = require("../../utils/errors");
+const { NotFoundError, ConflictError } = require("../../utils/errors");
 const { successResponse, failureResponse } = require("../../utils/responses");
 
 /**
@@ -88,7 +88,7 @@ router.delete("/:id", async function (req, res) {
   try {
     const category = await getCategories(req);
     if (category.courses.length > 0) {
-      throw new BadRequestError("该分类下有课程，无法删除");
+      throw new ConflictError("该分类下有课程，无法删除");
     }
     await category.destroy();
     successResponse(res, "删除分类成功");

@@ -11,12 +11,20 @@ NODE_ENV=development
 PORT=3000
 JWT_SECRET=你的秘钥
 RSA_PRIVATE_KEY=你的私钥
+ALIYUN_ACCESS_KEY_ID=your_access_key_id
+ALIYUN_ACCESS_KEY_SECRET=your_access_key_secret
+ALIYUN_OSS_BUCKET=your_bucket_name
+ALIYUN_OSS_REGION=your_region
 ```
 
 其中`NODE_ENV`配置为开发环境，如部署在生产环境可改为 prodection。
 `PORT`配置为服务端口，
 `JWT_SECRET`配置为秘钥，
-`RSA_PRIVATE_KEY`配置为 RSA 私钥。
+`RSA_PRIVATE_KEY`配置为 RSA 私钥,
+`ALIYUN_ACCESS_KEY_ID`配置为阿里云 Access Key ID，
+`ALIYUN_ACCESS_KEY_SECRET`配置为阿里云 Access Key Secret，
+`ALIYUN_OSS_BUCKET`配置为阿里云 OSS 桶名，
+`ALIYUN_OSS_REGION`配置为阿里云 OSS 区域。
 
 ## 生成秘钥
 

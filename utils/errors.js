@@ -28,4 +28,18 @@ class NotFoundError extends Error {
   }
 }
 
-module.exports = { BadRequestError, NotFoundError, UnauthorizedError };
+/**
+ * ConflictError  - 返回409错误
+ */
+class ConflictError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "ConflictError";
+  }
+}
+module.exports = {
+  BadRequestError,
+  NotFoundError,
+  UnauthorizedError,
+  ConflictError,
+};

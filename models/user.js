@@ -12,6 +12,9 @@ module.exports = (sequelize, DataTypes) => {
       models.User.hasMany(models.Course, {
         as: "courses",
       });
+      models.User.hasMany(models.Attachment, {
+        as: "attachment",
+      });
       models.User.belongsToMany(models.Course, {
         through: models.Like,
         foreignKey: "userId",

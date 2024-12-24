@@ -1,3 +1,4 @@
+const multer = require("multer");
 /**
  * @param {any} res
  * @param {any} message
@@ -20,53 +21,52 @@ function successResponse(res, message, data) {
  * @description   请求失败返回
  */
 function failureResponse(res, error) {
+  let statusCode = 500;
+  let message = "服务器错误";
+  let errors = error;
   if (error.name === "SequelizeValidationError") {
-    const errors = error.errors.map((e) => e.message);
-    return res.status(400).json({
-      message: "请求参数错误",
-      status: false,
-      error: errors,
-    });
+    statusCode = 400;
+    message = "请求参数错误";
+    errors = error.errors.map((e) => e.message);
+  } else if (error.name === "BadRequestError") {
+    statusCode = 400;
+    message = "错误的请求";
+    errors = error.message;
+  } else if (error.name === "UnauthorizedError") {
+    statusCode = 401;
+    message = "认证失败";
+    errors = error.message;
+  } else if (error.name === "JsonWebTokenError") {
+    statusCode = 401;
+    message = "认证失败";
+    errors = "您提交的token无效，请重新登录";
+  } else if (error.name === "TokenExpiredError") {
+    statusCode = 401;
+    message = "认证失败";
+    errors = "您提交的token已过期，请重新登录";
+  } else if (error.name === "NotFoundError") {
+    statusCode = 404;
+    message = "资源不存在";
+    errors = error.message;
+  } else if (error.name === "ConflictError") {
+    statusCode = 409;
+    message = "请求存在冲突";
+    errors = error.message;
+  } else if (error instanceof multer.MulterError) {
+    if (error.code === "LIMIT_FILE_SIZE") {
+      statusCode = 413;
+      message = "文件大小超过限制";
+      errors = "文件大小超过限制，请上传小于10MB的文件";
+    } else {
+      statusCode = 400;
+      message = "错误的请求";
+      errors = error.message;
+    }
   }
-  if (error.name === "BadRequestError") {
-    return res.status(400).json({
-      message: "错误的请求",
-      status: false,
-      error: [error.message],
-    });
-  }
-  if (error.name === "UnauthorizedError") {
-    return res.status(401).json({
-      message: "认证失败",
-      status: false,
-      error: [error.message],
-    });
-  }
-  if (error.name === "JsonWebTokenError") {
-    return res.status(401).json({
-      message: "认证失败",
-      status: false,
-      error: ["您提交的token无效，请重新登录"],
-    });
-  }
-  if (error.name === "TokenExpiredError") {
-    return res.status(401).json({
-      message: "认证失败",
-      status: false,
-      error: ["您提交的token已过期，请重新登录"],
-    });
-  }
-  if (error.name === "NotFoundError") {
-    return res.status(404).json({
-      message: "资源不存在",
-      status: false,
-      error: [error.message],
-    });
-  }
-  return res.status(500).json({
-    message: "服务器错误",
+  return res.status(statusCode).json({
+    message: message,
     status: false,
-    error: [error.message],
+    error: Array.isArray(errors) ? errors : [errors],
   });
 }
 
